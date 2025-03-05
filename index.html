@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Newton-Raphson</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
@@ -38,17 +36,15 @@
             <label for="tolerance" class="form-label">Tolerancia:</label>
             <input type="number" step="any" class="form-control" id="tolerance" value="0.0001" required>
         </div>
-        <button type="submit" class="btn btn-primary">Calcular Raíz</button>
+        <button type="submit" class="btn" style="background-color:#3b3d86">Calcular Raíz</button>
     </form>
 
     <h4 class="mt-4">Resultado:</h4>
     <pre id="result"></pre>
 
-    <!-- Canvas para graficar -->
     <canvas id="graphCanvas" height="400"></canvas>
 </div>
 
-<!-- Bootstrap JS and dependencies -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mathjs@9.4.4/lib/browser/math.js"></script>
@@ -57,15 +53,12 @@
     document.getElementById('newtonForm').addEventListener('submit', function (e) {
         e.preventDefault();
 
-        // Obtener los valores del formulario
         const func = document.getElementById('function').value;
         let x0 = parseFloat(document.getElementById('initialGuess').value);
         const tolerance = parseFloat(document.getElementById('tolerance').value);
 
-        // Calcular la derivada de la función
         const derivative = calculateDerivative(func);
 
-        // Ejecutar el método de Newton-Raphson
         let result = newtonRaphson(func, derivative, x0, tolerance);
         document.getElementById('result').textContent = `Raíz Aproximada: ${result.root}\nNúmero de Iteraciones: ${result.iterations}\nDerivada Calculada: ${derivative}`;
 
@@ -74,10 +67,9 @@
     });
 
     function calculateDerivative(func) {
-        // Calcula la derivada de la función usando math.js
         try {
             const derivative = math.derivative(func, 'x');
-            return derivative.toString(); // Regresa la derivada como cadena
+            return derivative.toString(); 
         } catch (error) {
             alert("Error al calcular la derivada. Asegúrate de ingresar una función válida.");
             return "";
@@ -92,7 +84,6 @@
 
         while (error > tolerance) {
             iterations++;
-            // Evaluar la función y su derivada
             let f_x = math.evaluate(func, { x: x });
             let f_prime_x = math.evaluate(derivative, { x: x });
 
@@ -101,7 +92,6 @@
                 break;
             }
 
-            // Aplicar la fórmula de Newton-Raphson
             let x_new = x - (f_x / f_prime_x);
             error = Math.abs(x_new - x);
             x = x_new;
@@ -112,21 +102,18 @@
     }
 
     function plotGraph(func, derivative) {
-        // Configuración para graficar la función y su derivada
         const ctx = document.getElementById('graphCanvas').getContext('2d');
 
         const xValues = [];
         const fValues = [];
         const dfValues = [];
 
-        // Generamos los valores de x, f(x) y f'(x) para la gráfica
         for (let i = -10; i <= 10; i += 0.1) {
             xValues.push(i);
             fValues.push(math.evaluate(func, { x: i }));
             dfValues.push(math.evaluate(derivative, { x: i }));
         }
 
-        // Gráfico usando Chart.js
         new Chart(ctx, {
             type: 'line',
             data: {
